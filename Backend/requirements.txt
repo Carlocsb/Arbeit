@@ -1,12 +1,8 @@
-fastapi
-uvicorn
-python-multipart
 python-pptx
 pandas
 openpyxl
 xlrd
 matplotlib
 pillow
-pywebview
-pyinstaller
-pywin32
+streamlit
+pywin32; sys_platform == "win32"
