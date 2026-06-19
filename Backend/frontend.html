@@ -792,18 +792,44 @@ uploadForm.addEventListener("submit", async function(e){
     }
 });
 
-downloadBtn.addEventListener("click", function(){
+downloadBtn.addEventListener("click", async function(){
     if(!generatedPptUrl){
         return;
     }
 
-    const a = document.createElement("a");
-    a.href = generatedPptUrl;
-    a.download = "Aktualisierte_Praesentation.pptx";
+    try{
+        if(window.pywebview && window.pywebview.api && window.pywebview.api.save_ppt_file){
+            const result = await window.pywebview.api.save_ppt_file(
+                generatedPptUrl,
+                "Aktualisierte_Praesentation.pptx"
+            );
 
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+            if(result.cancelled){
+                showStatus("Speichern wurde abgebrochen.", "loading");
+                return;
+            }
+
+            if(!result.success){
+                throw new Error(result.message || "Datei konnte nicht gespeichert werden.");
+            }
+
+            showStatus(result.message || "PowerPoint wurde gespeichert.", "success");
+            return;
+        }
+
+        const a = document.createElement("a");
+        a.href = generatedPptUrl;
+        a.download = "Aktualisierte_Praesentation.pptx";
+
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        showStatus("Download wurde gestartet.", "success");
+    }
+    catch(error){
+        showStatus(error.message || "Fehler beim Speichern der PowerPoint.", "error");
+    }
 });
 
 modalCloseBtn.addEventListener("click", closePreviewModal);

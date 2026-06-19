@@ -5,7 +5,7 @@ import threading
 import time
 import urllib.error
 import urllib.request
-
+from pathlib import Path
 import uvicorn
 import webview
 
@@ -95,7 +95,62 @@ def get_thinkcell_status(base_url: str) -> dict:
             "available": False,
             "reason": str(error),
         }
+class DesktopApi:
+    def __init__(self):
+        self.window = None
 
+    def save_ppt_file(self, file_url: str, suggested_filename: str = "Aktualisierte_Praesentation.pptx"):
+        """
+        Öffnet einen nativen Speichern-Dialog und speichert die generierte PPTX
+        an dem vom User ausgewählten Ort.
+        """
+        if self.window is None:
+            return {
+                "success": False,
+                "cancelled": False,
+                "message": "Desktop-Fenster ist nicht initialisiert."
+            }
+
+        save_path = self.window.create_file_dialog(
+            webview.SAVE_DIALOG,
+            save_filename=suggested_filename,
+            file_types=("PowerPoint (*.pptx)", "Alle Dateien (*.*)")
+        )
+
+        if not save_path:
+            return {
+                "success": False,
+                "cancelled": True,
+                "message": "Speichern wurde abgebrochen."
+            }
+
+        if isinstance(save_path, (list, tuple)):
+            save_path = save_path[0]
+
+        try:
+            with urllib.request.urlopen(file_url, timeout=60) as response:
+                data = response.read()
+
+            output_path = Path(save_path)
+
+            if output_path.suffix.lower() != ".pptx":
+                output_path = output_path.with_suffix(".pptx")
+
+            output_path.write_bytes(data)
+
+            return {
+                "success": True,
+                "cancelled": False,
+                "message": f"PowerPoint wurde gespeichert: {output_path}",
+                "path": str(output_path)
+            }
+
+        except Exception as error:
+            return {
+                "success": False,
+                "cancelled": False,
+                "message": str(error)
+            }
 
 def main():
     host = "127.0.0.1"
