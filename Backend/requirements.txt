@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-multipart
+python-pptx
+pandas
+openpyxl
+xlrd
+matplotlib
+pillow
+pywebview
+pyinstaller
+pywin32

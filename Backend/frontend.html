@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerPoint Automation Studio</title>
+
+<style>
+:root{
+    --primary:#2563eb;
+    --primary-dark:#1d4ed8;
+    --success:#16a34a;
+    --danger:#dc2626;
+    --warning:#d97706;
+    --bg:#eef2f7;
+    --panel:#ffffff;
+    --panel-soft:#f8fafc;
+    --border:#dbe3ef;
+    --text:#172033;
+    --muted:#64748b;
+    --shadow:0 18px 45px rgba(15,23,42,0.10);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter, Arial, Helvetica, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 45%,#e0f2fe 100%);
+    color:var(--text);
+}
+
+.app{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    min-height:100vh;
+}
+
+.sidebar{
+    background:#0f172a;
+    color:white;
+    padding:28px 22px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:36px;
+}
+
+.logo{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#2563eb,#38bdf8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    box-shadow:0 10px 25px rgba(37,99,235,0.35);
+}
+
+.brand-text h1{
+    font-size:17px;
+    line-height:1.2;
+}
+
+.brand-text p{
+    font-size:12px;
+    color:#94a3b8;
+    margin-top:3px;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.nav-item{
+    padding:12px 14px;
+    border-radius:12px;
+    color:#cbd5e1;
+    font-size:14px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.nav-item.active{
+    background:rgba(37,99,235,0.20);
+    color:white;
+    border:1px solid rgba(96,165,250,0.35);
+}
+
+.sidebar-footer{
+    font-size:12px;
+    color:#94a3b8;
+    line-height:1.5;
+    border-top:1px solid rgba(148,163,184,0.2);
+    padding-top:18px;
+}
+
+.main{
+    padding:30px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:26px;
+}
+
+.page-title h2{
+    font-size:28px;
+    letter-spacing:-0.03em;
+}
+
+.page-title p{
+    color:var(--muted);
+    margin-top:6px;
+    font-size:14px;
+}
+
+.connection{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    padding:10px 14px;
+    border-radius:999px;
+    box-shadow:0 8px 20px rgba(15,23,42,0.06);
+    font-size:13px;
+    color:var(--muted);
+}
+
+.dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#f59e0b;
+}
+
+.dashboard{
+    display:grid;
+    grid-template-columns:410px 1fr;
+    gap:24px;
+    align-items:start;
+}
+
+.card{
+    background:rgba(255,255,255,0.88);
+    backdrop-filter:blur(14px);
+    border:1px solid rgba(219,227,239,0.9);
+    border-radius:22px;
+    box-shadow:var(--shadow);
+}
+
+.control-card{
+    padding:24px;
+}
+
+.section-header{
+    margin-bottom:20px;
+}
+
+.section-header h3{
+    font-size:18px;
+    margin-bottom:6px;
+}
+
+.section-header p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+}
+
+.upload-stack{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.upload-card{
+    border:1.5px dashed #b8c7dc;
+    border-radius:18px;
+    padding:18px;
+    background:var(--panel-soft);
+    transition:0.2s ease;
+}
+
+.upload-card:hover{
+    border-color:var(--primary);
+    background:#f8fbff;
+}
+
+.upload-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.upload-icon{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    background:#dbeafe;
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+}
+
+.upload-text label{
+    display:block;
+    font-weight:700;
+    font-size:14px;
+}
+
+.upload-text span{
+    color:var(--muted);
+    font-size:12px;
+}
+
+input[type="file"]{
+    width:100%;
+    font-size:13px;
+    color:var(--muted);
+}
+
+input[type="file"]::file-selector-button{
+    border:none;
+    background:#e0ecff;
+    color:#1d4ed8;
+    padding:9px 12px;
+    border-radius:10px;
+    font-weight:700;
+    margin-right:10px;
+    cursor:pointer;
+}
+
+.actions{
+    margin-top:22px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    font-weight:800;
+    transition:0.2s ease;
+}
+
+.primary-btn{
+    width:100%;
+    padding:15px 16px;
+    border-radius:14px;
+    background:linear-gradient(135deg,var(--primary),#38bdf8);
+    color:white;
+    font-size:15px;
+    box-shadow:0 12px 24px rgba(37,99,235,0.28);
+}
+
+.primary-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:0 16px 30px rgba(37,99,235,0.34);
+}
+
+.primary-btn:disabled{
+    background:#94a3b8;
+    box-shadow:none;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.download-btn{
+    width:100%;
+    padding:14px 16px;
+    border-radius:14px;
+    background:#dcfce7;
+    color:#166534;
+    font-size:15px;
+}
+
+.download-btn:hover{
+    background:#bbf7d0;
+}
+
+.download-btn:disabled{
+    background:#e2e8f0;
+    color:#94a3b8;
+    cursor:not-allowed;
+}
+
+.status{
+    margin-top:18px;
+    padding:14px 16px;
+    border-radius:14px;
+    display:none;
+    font-size:14px;
+    line-height:1.4;
+}
+
+.success{
+    background:#dcfce7;
+    color:#166534;
+    border:1px solid #86efac;
+}
+
+.error{
+    background:#fee2e2;
+    color:#991b1b;
+    border:1px solid #fecaca;
+}
+
+.loading{
+    background:#fef3c7;
+    color:#92400e;
+    border:1px solid #fde68a;
+}
+
+.progress{
+    margin-top:18px;
+    height:8px;
+    background:#e2e8f0;
+    border-radius:999px;
+    overflow:hidden;
+    display:none;
+}
+
+.progress-bar{
+    width:35%;
+    height:100%;
+    background:linear-gradient(90deg,var(--primary),#38bdf8);
+    border-radius:999px;
+    animation:loading 1.2s infinite ease-in-out;
+}
+
+@keyframes loading{
+    0%{transform:translateX(-100%);}
+    100%{transform:translateX(300%);}
+}
+
+/* Größere PowerPoint-Vorschau */
+.preview-card{
+    padding:24px;
+    min-height:900px;
+}
+
+.preview-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.preview-toolbar h3{
+    font-size:18px;
+}
+
+.preview-toolbar span{
+    font-size:13px;
+    color:var(--muted);
+}
+
+.preview-placeholder{
+    min-height:700px;
+    border:1.5px dashed #cbd5e1;
+    border-radius:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:linear-gradient(135deg,#f8fafc,#eef2ff);
+    color:var(--muted);
+    padding:40px;
+}
+
+.placeholder-icon{
+    width:74px;
+    height:74px;
+    border-radius:22px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    margin-bottom:18px;
+    box-shadow:0 10px 25px rgba(15,23,42,0.08);
+}
+
+.preview-placeholder h4{
+    color:var(--text);
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+.preview-placeholder p{
+    max-width:420px;
+    line-height:1.6;
+    font-size:14px;
+}
+
+.slides-preview{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(430px,1fr));
+    gap:26px;
+}
+
+.slide-card{
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    box-shadow:0 12px 25px rgba(15,23,42,0.08);
+    transition:0.2s ease;
+    cursor:pointer;
+}
+
+.slide-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 18px 35px rgba(15,23,42,0.12);
+}
+
+.slide-card img{
+    width:100%;
+    height:280px;
+    object-fit:contain;
+    display:block;
+    background:#f1f5f9;
+    padding:12px;
+}
+
+.slide-number{
+    padding:14px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-weight:800;
+    font-size:15px;
+}
+
+.slide-number span{
+    color:var(--muted);
+    font-weight:600;
+    font-size:13px;
+}
+
+/* Vollbild-Vorschau */
+.preview-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,0.82);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:32px;
+}
+
+.preview-modal.active{
+    display:flex;
+}
+
+.preview-modal-content{
+    width:min(1400px,96vw);
+    max-height:94vh;
+    background:white;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,0.35);
+}
+
+.preview-modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 20px;
+    border-bottom:1px solid var(--border);
+}
+
+.preview-modal-header strong{
+    font-size:16px;
+}
+
+.preview-modal-close{
+    background:#fee2e2;
+    color:#991b1b;
+    padding:10px 14px;
+    border-radius:12px;
+    font-weight:800;
+}
+
+.preview-modal-image-wrap{
+    background:#f1f5f9;
+    padding:22px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.preview-modal-image-wrap img{
+    width:100%;
+    max-height:78vh;
+    object-fit:contain;
+    display:block;
+}
+
+@media(max-width:1200px){
+    .dashboard{
+        grid-template-columns:1fr;
+    }
+
+    .slides-preview{
+        grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
+    }
+}
+
+@media(max-width:1000px){
+    .app{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        padding:20px;
+    }
+}
+
+@media(max-width:600px){
+    .slides-preview{
+        grid-template-columns:1fr;
+    }
+
+    .slide-card img{
+        height:230px;
+    }
+
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div>
+            <div class="brand">
+                <div class="logo">P</div>
+                <div class="brand-text">
+                    <h1>PPT Automation</h1>
+                    <p>Template Generator</p>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <div class="nav-item active">● Generator</div>
+                <div class="nav-item">○ Vorschau</div>
+                <div class="nav-item">○ Export</div>
+                <div class="nav-item">○ Einstellungen</div>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            Lokales Backend<br>
+            FastAPI · Python · PowerPoint
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div class="page-title">
+                <h2>PowerPoint Automation Studio</h2>
+                <p>Excel-Daten hochladen, Vorlage befüllen und fertige Präsentation exportieren.</p>
+            </div>
+
+            <div class="connection">
+                <span class="dot" id="connectionDot"></span>
+                <span id="connectionText">Backend prüfen...</span>
+            </div>
+        </header>
+
+        <section class="dashboard">
+
+            <div class="card control-card">
+
+                <div class="section-header">
+                    <h3>Dateien importieren</h3>
+                    <p>
+                        Lade eine Excel-Datei mit Daten und eine PowerPoint-Vorlage hoch.
+                    </p>
+                </div>
+
+                <form id="uploadForm">
+
+                    <div class="upload-stack">
+
+                        <div class="upload-card">
+                            <div class="upload-top">
+                                <div class="upload-icon">XLS</div>
+                                <div class="upload-text">
+                                    <label for="excelFile">Excel-Datei</label>
+                                    <span>.xlsx oder .xls</span>
+                                </div>
+                            </div>
+
+                            <input
+                                type="file"
+                                id="excelFile"
+                                accept=".xlsx,.xls"
+                                required
+                            >
+                        </div>
+
+                        <div class="upload-card">
+                            <div class="upload-top">
+                                <div class="upload-icon">PPT</div>
+                                <div class="upload-text">
+                                    <label for="pptTemplate">PowerPoint-Vorlage</label>
+                                    <span>.pptx Template</span>
+                                </div>
+                            </div>
+
+                            <input
+                                type="file"
+                                id="pptTemplate"
+                                accept=".pptx"
+                                required
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="actions">
+                        <button type="submit" id="submitBtn" class="primary-btn">
+                            Präsentation generieren
+                        </button>
+
+                        <button type="button" id="downloadBtn" class="download-btn" disabled>
+                            PowerPoint herunterladen
+                        </button>
+                    </div>
+
+                </form>
+
+                <div class="progress" id="progress">
+                    <div class="progress-bar"></div>
+                </div>
+
+                <div id="statusBox" class="status"></div>
+
+            </div>
+
+            <div class="card preview-card">
+
+                <div class="preview-toolbar">
+                    <h3>PowerPoint Vorschau</h3>
+                    <span id="slideCounter">0 Folien</span>
+                </div>
+
+                <div id="previewPlaceholder" class="preview-placeholder">
+                    <div class="placeholder-icon">▣</div>
+                    <h4>Noch keine Präsentation erstellt</h4>
+                    <p>
+                        Nach dem Upload werden hier automatisch Vorschaubilder der generierten Folien angezeigt.
+                        Klicke auf eine Folie, um sie größer zu öffnen.
+                    </p>
+                </div>
+
+                <div id="slidesPreview" class="slides-preview"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div class="preview-modal" id="previewModal">
+    <div class="preview-modal-content">
+        <div class="preview-modal-header">
+            <strong id="modalTitle">Folie</strong>
+            <button type="button" class="preview-modal-close" id="modalCloseBtn">
+                Schließen
+            </button>
+        </div>
+        <div class="preview-modal-image-wrap">
+            <img id="modalImage" src="" alt="Große Folienvorschau">
+        </div>
+    </div>
+</div>
+
+<script>
+let generatedPptUrl = null;
+
+const API_BASE_URL = window.location.origin;
+
+const uploadForm = document.getElementById("uploadForm");
+const submitBtn = document.getElementById("submitBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+const statusBox = document.getElementById("statusBox");
+const progress = document.getElementById("progress");
+const connectionDot = document.getElementById("connectionDot");
+const connectionText = document.getElementById("connectionText");
+const slideCounter = document.getElementById("slideCounter");
+
+const previewModal = document.getElementById("previewModal");
+const modalImage = document.getElementById("modalImage");
+const modalTitle = document.getElementById("modalTitle");
+const modalCloseBtn = document.getElementById("modalCloseBtn");
+
+checkBackendConnection();
+
+uploadForm.addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const excelFile = document.getElementById("excelFile").files[0];
+    const pptTemplate = document.getElementById("pptTemplate").files[0];
+
+    if(!excelFile || !pptTemplate){
+        showStatus("Bitte Excel-Datei und PowerPoint-Vorlage auswählen.", "error");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("excel", excelFile);
+    formData.append("template", pptTemplate);
+
+    try{
+        submitBtn.disabled = true;
+        downloadBtn.disabled = true;
+        progress.style.display = "block";
+
+        showStatus("PowerPoint wird erstellt. Bitte warten...", "loading");
+
+        const response = await fetch(`${API_BASE_URL}/generate-ppt-from-hidden-mappings`, {
+            method:"POST",
+            body:formData
+        });
+
+        const result = await response.json();
+
+        if(!response.ok){
+            throw new Error(result.detail || "Fehler beim Erstellen der PowerPoint.");
+        }
+
+        displayPreview(result.preview_images || []);
+        enableDownload(result.ppt_file);
+
+        const updatedNativeText = result.updated_native_charts !== undefined
+            ? ` Native Diagramme: ${result.updated_native_charts}.`
+            : "";
+
+        const updatedThinkCellText = result.updated_thinkcell_charts !== undefined
+            ? ` think-cell Diagramme: ${result.updated_thinkcell_charts}.`
+            : "";
+
+        showStatus(`PowerPoint erfolgreich erstellt.${updatedNativeText}${updatedThinkCellText}`, "success");
+    }
+    catch(error){
+        showStatus(error.message || "Backend konnte nicht erreicht werden.", "error");
+    }
+    finally{
+        submitBtn.disabled = false;
+        progress.style.display = "none";
+    }
+});
+
+downloadBtn.addEventListener("click", function(){
+    if(!generatedPptUrl){
+        return;
+    }
+
+    const a = document.createElement("a");
+    a.href = generatedPptUrl;
+    a.download = "Aktualisierte_Praesentation.pptx";
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+});
+
+modalCloseBtn.addEventListener("click", closePreviewModal);
+
+previewModal.addEventListener("click", function(e){
+    if(e.target === previewModal){
+        closePreviewModal();
+    }
+});
+
+document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){
+        closePreviewModal();
+    }
+});
+
+function showStatus(message,type){
+    statusBox.style.display = "block";
+    statusBox.className = `status ${type}`;
+    statusBox.innerText = message;
+}
+
+function displayPreview(slides){
+    const preview = document.getElementById("slidesPreview");
+    const placeholder = document.getElementById("previewPlaceholder");
+
+    preview.innerHTML = "";
+    slideCounter.innerText = `${slides.length} Folien`;
+
+    if(!slides.length){
+        placeholder.style.display = "flex";
+        return;
+    }
+
+    placeholder.style.display = "none";
+
+    slides.forEach((slide,index)=>{
+        const card = document.createElement("div");
+        card.className = "slide-card";
+
+        card.innerHTML = `
+            <img src="${slide}" alt="Folie ${index + 1}">
+            <div class="slide-number">
+                Folie ${index + 1}
+                <span>Klicken zum Vergrößern</span>
+            </div>
+        `;
+
+        card.addEventListener("click", function(){
+            openPreviewModal(slide, index + 1);
+        });
+
+        preview.appendChild(card);
+    });
+}
+
+function openPreviewModal(imageUrl, slideNumber){
+    modalImage.src = imageUrl;
+    modalTitle.innerText = `Folie ${slideNumber}`;
+    previewModal.classList.add("active");
+}
+
+function closePreviewModal(){
+    previewModal.classList.remove("active");
+    modalImage.src = "";
+}
+
+function enableDownload(url){
+    generatedPptUrl = url;
+    downloadBtn.disabled = false;
+}
+
+async function checkBackendConnection(){
+    try{
+        const response = await fetch(`${API_BASE_URL}/health`);
+
+        if(!response.ok){
+            throw new Error("Backend nicht erreichbar");
+        }
+
+        connectionDot.style.background = "#22c55e";
+        connectionText.innerText = "Backend online";
+    }
+    catch(error){
+        connectionDot.style.background = "#ef4444";
+        connectionText.innerText = "Backend offline";
+    }
+}
+</script>
+
+</body>
+</html>
