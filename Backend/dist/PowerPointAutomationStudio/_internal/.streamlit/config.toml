@@ -1,0 +1,18 @@
+[global]
+developmentMode = false
+
+[server]
+headless = true
+address = "127.0.0.1"
+port = 8501
+baseUrlPath = ""
+enableCORS = true
+enableXsrfProtection = false
+
+[browser]
+serverAddress = "127.0.0.1"
+serverPort = 8501
+gatherUsageStats = false
+
+[logger]
+level = "info"
