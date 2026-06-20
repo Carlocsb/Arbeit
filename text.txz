@@ -1,0 +1,19 @@
+rm -rf build dist PowerPointAutomationStudio.spec
+
+./.venv/bin/python -m PyInstaller \
+  --onedir \
+  --console \
+  --clean \
+  --name PowerPointAutomationStudio \
+  --add-data "front.py:." \
+  --add-data "main.py:." \
+  --add-data "mappings:mappings" \
+  --add-data ".streamlit:.streamlit" \
+  --collect-all streamlit \
+  --hidden-import main \
+  --hidden-import pandas \
+  --hidden-import openpyxl \
+  --hidden-import xlrd \
+  --hidden-import pptx \
+  --hidden-import PIL \
+  desktop_app.py

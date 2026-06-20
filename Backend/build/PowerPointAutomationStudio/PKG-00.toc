@@ -49,7 +49,7 @@
    '/Users/csb/Desktop/Arbeit/Backend/.venv/lib/python3.13/site-packages/PyInstaller/hooks/rthooks/pyi_rth_mplconfig.py',
    'PYSOURCE'),
   ('desktop_app',
-   '/Users/csb/Desktop/Arbeit/Backend/desktop_app.py',
+   '/Users/csb/Desktop/Arbeit/Backend/launcher/desktop_app.py',
    'PYSOURCE')],
  'Python',
  True,

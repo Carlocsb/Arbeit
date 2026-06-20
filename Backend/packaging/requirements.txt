@@ -1,0 +1,9 @@
+python-pptx
+pandas
+openpyxl
+xlrd
+matplotlib
+pillow
+streamlit
+pywin32; sys_platform == "win32"
+Streamlit
